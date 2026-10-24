@@ -58,7 +58,7 @@ function move(dx, dz) {
   }
   selected = { x: game.player.x, y: world.height - 1, z: game.player.z };
   renderState();
-  announce(`Step ${game.steps}. Position ${game.player.x}, ${game.player.z}. Player color averaged beneath you.`);
+  announce(`Step ${game.steps}. Averaged all ${world.size.toLocaleString()} voxels. Position ${game.player.x}, ${game.player.z}.`);
 }
 function paint(target) {
   world.setColor(target.x, target.y, target.z, game.playerColor);
@@ -137,6 +137,12 @@ $('visible-layers').addEventListener('input', (event) => {
   $('layer-value').textContent = `${layers} / ${world.height}`;
   view?.setLayers(layers);
 });
+$('reveal-faint').addEventListener('change', (event) => {
+  view?.setRevealFaint(event.target.checked);
+  announce(event.target.checked
+    ? 'Faint colors brightened in the view. Stored RGB values and step count are unchanged.'
+    : 'Showing exact RGB brightness. Stored values and step count are unchanged.');
+});
 $('reset-world').addEventListener('click', () => {
   game.reset();
   setPlayerColor([0, 0, 0]);
@@ -154,7 +160,7 @@ $('camera-in').addEventListener('click', () => view?.zoom(0.85));
 $('camera-out').addEventListener('click', () => view?.zoom(1.15));
 window.addEventListener('keydown', (event) => {
   if (!playing || event.altKey || event.ctrlKey || event.metaKey) return;
-  if (event.target.closest('input, textarea, select, button, summary, [contenteditable="true"]')) return;
+  if (event.target.closest('input, textarea, select, summary, [contenteditable="true"]')) return;
   const directions = { w: [0, -1], ArrowUp: [0, -1], a: [-1, 0], ArrowLeft: [-1, 0], s: [0, 1], ArrowDown: [0, 1], d: [1, 0], ArrowRight: [1, 0] };
   const direction = directions[event.key] || directions[event.key.toLowerCase()];
   if (direction || event.key.toLowerCase() === 'p') {

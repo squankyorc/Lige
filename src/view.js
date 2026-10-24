@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { displayColorScale } from './display-color.js';
 
 // Rendering has no simulation clock: the world changes only through game actions.
 export function createWorldView(container, world, onSelect) {
@@ -82,6 +83,7 @@ export function createWorldView(container, world, onSelect) {
   marker.renderOrder = 6;
   scene.add(marker);
   let visibleLayers = world.height;
+  let revealFaint = true;
   let selected = { x: 8, y: 4, z: 8 };
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -131,19 +133,31 @@ export function createWorldView(container, world, onSelect) {
     resize();
   }
   resetCamera();
+  function updateColors() {
+    for (let id = 0; id < ids.length; id++) {
+      const offset = ids[id].index * 3;
+      const r = world.colors[offset];
+      const g = world.colors[offset + 1];
+      const b = world.colors[offset + 2];
+      const scale = displayColorScale(r, g, b, revealFaint) / 255;
+      color.setRGB(r * scale, g * scale, b * scale, THREE.SRGBColorSpace);
+      voxels.setColorAt(id, color);
+    }
+    voxels.instanceColor.needsUpdate = true;
+  }
   return {
     update(player, target, playerColor = [0, 0, 0]) {
       selected = target;
-      for (let id = 0; id < ids.length; id++) {
-        const offset = ids[id].index * 3;
-        color.setRGB(world.colors[offset] / 255, world.colors[offset + 1] / 255, world.colors[offset + 2] / 255, THREE.SRGBColorSpace);
-        voxels.setColorAt(id, color);
-      }
-      voxels.instanceColor.needsUpdate = true;
+      updateColors();
       selection.position.copy(position(target.x, target.y, target.z));
       selection.visible = target.y < visibleLayers;
       marker.position.copy(position(player.x, world.height, player.z));
       body.material.color.setRGB(playerColor[0] / 255, playerColor[1] / 255, playerColor[2] / 255, THREE.SRGBColorSpace);
+      render();
+    },
+    setRevealFaint(enabled) {
+      revealFaint = enabled;
+      updateColors();
       render();
     },
     setLayers(layers) {

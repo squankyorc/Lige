@@ -37,11 +37,13 @@ The home screen introduces the rules and controls. Choose **Start exploring** to
 3. To paint directly, click a voxel to select it, or use the X/Y/Z coordinate fields to select any voxel, including an interior one.
 4. Choose **Paint selected** or **Paint below player** to set that voxel to the player color. Pressing **P** also paints the voxel directly below the player.
 
-Movement is cardinal across the top surface. One physical key press produces one step; held-key repeats are ignored. Walking into the world boundary does not move the player, increment the step counter, or advance diffusion. Focus the scene to use movement shortcuts. Shortcuts are inactive while editing form fields or focusing buttons, so those controls retain their native keyboard behavior.
+Movement is cardinal across the top surface. One physical key press produces one step; held-key repeats are ignored. Walking into the world boundary does not move the player, increment the step counter, or advance diffusion. Movement shortcuts work from the scene and after clicking game buttons. Shortcuts are inactive while editing form fields, so arrow keys still adjust numeric inputs normally. Enter and Space retain their native button behavior.
 
 Drag to orbit the camera and scroll to zoom. The view buttons also orbit, zoom, and reset the camera without requiring a drag gesture. The visible-layer control cuts away upper layers so lower voxels can be inspected; it only changes the view and never changes simulation data. The coordinate/RGB inspector reports the selected voxel. **Reset** restores all voxels and the player color to black, the player to its starting position, and the step counter to zero.
 
 The bright player marker, selection outline, and subtle voxel-edge guides are interface aids, not colored voxels. A black voxel's stored RGB channels are exactly zero even when a guide makes its edges visible.
+
+**Reveal faint colors** starts enabled because division by eight makes a player's first contribution very dark (RGB `[100, 100, 100]` becomes `[12.5, 12.5, 12.5]`). It brightens only the rendered voxel colors while preserving RGB channel ratios and keeping pure black exactly black. For a nonzero voxel, the display multiplies each channel by `sqrt(255 / max(R,G,B))`; the maximum displayed channel stays within 255. Uncheck it to show exact RGB brightness. Simulation buffers, the inspector, and the step counter are unaffected. Equal R/G/B values produce grayscale; use unequal channels or a preset to leave a colored trail.
 
 ## Diffusion rule
 
@@ -76,7 +78,7 @@ RGB channels are stored in `Float32Array` buffers on a 0–255 scale. Fractional
 
 ## Verification
 
-`pnpm test` runs 21 tests covering the black invariant, independent RGB channel averaging, all six face neighbors, synchronous double-buffer behavior, color spreading, fixed-black boundary normalization, player-color injection, resetting, and the relationship between successful movement and diffusion. CI installs from the lockfile, runs the tests, builds the production bundle, and publishes main to GitHub Pages after those checks pass. Pull requests run the checks without publishing.
+`pnpm test` runs 27 tests covering the black invariant, independent RGB channel averaging, all six face neighbors, synchronous double-buffer behavior, color spreading, fixed-black boundary normalization, player-color injection, resetting, faint-color display, and the relationship between successful movement and diffusion. CI installs from the lockfile, runs the tests, builds the production bundle, and publishes main to GitHub Pages after those checks pass. Pull requests run the checks without publishing.
 
 Browser verification on October 23, 2026 covered the home screen, black startup, exact `[240, 80, 40] / 8` injection, later neighbor spreading, direct painting without a step, home/resume state preservation, a held movement key, blocked movement, cutaway/camera controls, reset, and a 390-pixel-wide layout. This checks the tested browser; it is not a claim of compatibility with every device.
 
