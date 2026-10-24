@@ -56,7 +56,7 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(player):
 		return
 	var p := player.global_position
-	var material_name := {1: "Grass", 2: "Dirt", 3: "Stone", 5: "Construction"}[player.active_block]
+	var material_name: String = String(({1: "Grass", 2: "Dirt", 3: "Stone", 5: "Construction"}).get(player.active_block, "Unknown"))
 	status.text = "VOXEL BASE | Y -256 to +256 inclusive\nXYZ: %d, %d, %d    Loaded chunks: %d\nWASD move  |  Mouse look  |  Space jump\nLeft click mine  |  Right click place\n1 Grass  2 Dirt  3 Stone  4 Construction (%s)\nP save  |  Esc unlock mouse" % [floori(p.x), floori(p.y), floori(p.z), world.chunks.size(), material_name]
 
 func _exit_tree() -> void:
