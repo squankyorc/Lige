@@ -32,10 +32,20 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= GRAVITY * delta
-	elif Input.is_action_just_pressed("jump"):
+	elif Input.is_physical_key_pressed(KEY_SPACE):
 		velocity.y = JUMP_SPEED
-	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-	var movement := (transform.basis * Vector3(input.x, 0, input.y)).normalized()
+	# Direct physical-key input keeps this standalone project independent of InputMap setup.
+	var horizontal := 0.0
+	var forward := 0.0
+	if Input.is_physical_key_pressed(KEY_A):
+		horizontal -= 1.0
+	if Input.is_physical_key_pressed(KEY_D):
+		horizontal += 1.0
+	if Input.is_physical_key_pressed(KEY_W):
+		forward -= 1.0
+	if Input.is_physical_key_pressed(KEY_S):
+		forward += 1.0
+	var movement := (transform.basis * Vector3(horizontal, 0, forward)).normalized()
 	velocity.x = movement.x * WALK_SPEED
 	velocity.z = movement.z * WALK_SPEED
 	move_and_slide()

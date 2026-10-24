@@ -93,6 +93,9 @@ func focus(pos: Vector3) -> void:
 	if c == center_chunk:
 		return
 	center_chunk = c
+	# Discard requests for the old view so fast travel does not build stale chunks.
+	pending.clear()
+	queued.clear()
 	desired.clear()
 	for dz in range(-HORIZONTAL_RADIUS, HORIZONTAL_RADIUS + 1):
 		for dx in range(-HORIZONTAL_RADIUS, HORIZONTAL_RADIUS + 1):
