@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f2e9" />
+    <meta name="description" content="A quiet, playable 3D voxel world. Choose a color, take a step, and watch a simple rule turn small movements into spreading color." />
+    <title>Lige — A world of color</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <section id="home-screen" aria-label="Welcome to Lige">
+      <header class="site-header home-header">
+        <a class="brand" href="#" aria-label="Lige home">
+          <svg class="brand-icon" viewBox="0 0 32 36" aria-hidden="true"><path d="m16 2 14 8v16l-14 8L2 26V10Z"/><path d="m2 10 14 8 14-8M16 18v16"/></svg>
+          <span>LIGE<span class="brand-dot">.</span></span>
+        </a>
+        <span class="header-note">A LITTLE WORLD. ONE SIMPLE RULE.</span>
+        <a class="quiet-link" href="#how-to-play">How it works <span aria-hidden="true">↗</span></a>
+      </header>
+      <main id="main-content" class="home-main">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="tiny-square" aria-hidden="true"></span>A STEP-DRIVEN COLOR WORLD</div>
+          <h1>Small steps.<br />A world of <em>color.</em></h1>
+          <p class="hero-description">An experiment in motion and possibility. Inspired by Conway’s Game of Life, built with black voxels and a rule you bring to life.</p>
+          <p class="hero-instruction">Choose your color. Take a step. See what spreads.</p>
+          <div class="hero-actions"><button id="start-game" class="button button-primary button-start" type="button">Start exploring <span aria-hidden="true">↗</span></button><span class="start-note">NO SCORE. NO RUSH.<br />JUST A WORLD TO MAKE.</span></div>
+          <p class="home-state" id="home-state"><span class="status-dot" aria-hidden="true"></span>Your world starts completely black.</p>
+        </div>
+        <div class="hero-art" aria-label="An isometric illustration of completely black voxels">
+          <div class="art-caption"><span>WORLD 001</span><span>AWAITING YOUR FIRST STEP</span></div>
+          <svg class="voxel-art" viewBox="0 0 600 520" role="img" aria-label="Black blocks arranged in a small isometric world">
+            <defs>
+              <pattern id="grid" width="44" height="25.4" patternUnits="userSpaceOnUse" patternTransform="translate(14 11)"><path d="M0 0 44 25.4M44 0 0 25.4" stroke="#cacbc0" stroke-width=".7" fill="none"/></pattern>
+              <g id="art-cube"><path d="m0 0 44-25.4L88 0 44 25.4Z" fill="#242824" stroke="#4c5048" stroke-width=".8"/><path d="m0 0 44 25.4v50.8L0 50.8Z" fill="#0d100e" stroke="#363b34" stroke-width=".8"/><path d="m44 25.4L88 0v50.8L44 76.2Z" fill="#171b17" stroke="#41463e" stroke-width=".8"/></g>
+            </defs>
+            <ellipse cx="311" cy="348" rx="204" ry="86" fill="#c7c9ba" opacity=".42"/>
+            <path d="M24 292 300 133l276 159-276 159Z" fill="url(#grid)"/>
+            <g transform="translate(80 239)">
+              <use href="#art-cube" x="176" y="-101.6"/><use href="#art-cube" x="220" y="-76.2"/><use href="#art-cube" x="264" y="-50.8"/>
+              <use href="#art-cube" x="132" y="-76.2"/><use href="#art-cube" x="176" y="-50.8"/><use href="#art-cube" x="220" y="-25.4"/><use href="#art-cube" x="264" y="0"/>
+              <use href="#art-cube" x="88" y="-50.8"/><use href="#art-cube" x="132" y="-25.4"/><use href="#art-cube" x="176" y="0"/><use href="#art-cube" x="220" y="25.4"/><use href="#art-cube" x="264" y="50.8"/>
+              <use href="#art-cube" x="44" y="-25.4"/><use href="#art-cube" x="88" y="0"/><use href="#art-cube" x="132" y="25.4"/><use href="#art-cube" x="176" y="50.8"/><use href="#art-cube" x="220" y="76.2"/>
+              <use href="#art-cube" x="0" y="0"/><use href="#art-cube" x="44" y="25.4"/><use href="#art-cube" x="88" y="50.8"/><use href="#art-cube" x="132" y="76.2"/><use href="#art-cube" x="176" y="101.6"/>
+              <use href="#art-cube" x="176" y="-101.6" transform="translate(0 -50.8)"/><use href="#art-cube" x="220" y="-76.2" transform="translate(0 -50.8)"/>
+              <use href="#art-cube" x="132" y="-76.2" transform="translate(0 -50.8)"/><use href="#art-cube" x="176" y="-50.8" transform="translate(0 -50.8)"/>
+              <use href="#art-cube" x="88" y="-50.8" transform="translate(0 -50.8)"/>
+              <use href="#art-cube" x="176" y="-101.6" transform="translate(0 -101.6)"/>
+            </g>
+            <path d="M349 121h106v-22" stroke="#6d7464" stroke-width="1" fill="none"/>
+            <circle cx="349" cy="121" r="3" fill="#222820"/>
+            <text x="419" y="87" font-size="10" font-family="monospace" letter-spacing="1" fill="#535b4a">R 0 · G 0 · B 0</text>
+            <g transform="translate(287 420)"><path d="M0-12v24M-12 0h24" stroke="#7c8372" stroke-width="1"/><circle r="21" stroke="#a7ae9d" stroke-width="1" fill="none"/></g>
+          </svg>
+          <div class="art-footer"><span class="art-black-swatch" aria-hidden="true"></span><span>EVERYTHING BEGINS AT ZERO.</span><span class="art-index">16 × 5 × 16</span></div>
+        </div>
+        <section class="how-to-play" id="how-to-play" aria-labelledby="how-heading">
+          <div class="how-heading"><span class="section-index">THE IDEA</span><h2 id="how-heading">One rule. Endless possibilities.</h2><p>Color changes only when you make a move.</p></div>
+          <article class="instruction-card"><span class="card-number">01 / CHOOSE</span><h3>Bring a little color.</h3><p>Pick your player’s RGB color. The world stays black until you take a step or deliberately paint a voxel.</p></article>
+          <article class="instruction-card"><span class="card-number">02 / WALK</span><h3>Leave something behind.</h3><p>Move with <kbd>WASD</kbd>, arrow keys, or the on-screen arrows. Your chosen color joins the average of the block beneath your new position.</p></article>
+          <article class="instruction-card"><span class="card-number">03 / EXPLORE</span><h3>Watch a rule unfold.</h3><p>Every block averages itself with its six face neighbors, all at once. Drag to orbit, scroll to zoom, and click a voxel or enter its coordinates to paint.</p></article>
+          <div class="rule-strip"><span><b>THE RULE</b> (self + 6 neighbors) ÷ 7</span><span><b>UNDER YOUR FEET</b> (self + 6 neighbors + player color) ÷ 8</span><span><b>AT THE EDGES</b> Outside the world is fixed black.</span></div>
+        </section>
+      </main>
+      <footer class="home-footer"><span>LIGE — AN INTERACTIVE COLOR AUTOMATON</span><span>START FROM NOTHING. MAKE SOMETHING.</span></footer>
+    </section>
+
+    <section id="game-screen" aria-label="Lige game" hidden>
+      <header class="site-header game-header">
+        <button id="go-home" class="brand brand-button" type="button" aria-label="Return to home screen"><svg class="brand-icon" viewBox="0 0 32 36" aria-hidden="true"><path d="m16 2 14 8v16l-14 8L2 26V10Z"/><path d="m2 10 14 8 14-8M16 18v16"/></svg><span>LIGE<span class="brand-dot">.</span></span></button>
+        <span class="game-header-title">YOUR LITTLE WORLD</span>
+        <div class="game-metrics"><div><span class="metric-label">STEPS</span><output id="step-count">0</output></div><div><span class="metric-label">POSITION X / Z</span><output id="player-position">8 / 8</output></div></div>
+      </header>
+      <main class="game-main">
+        <section class="world-panel" aria-labelledby="world-heading">
+          <div class="world-heading"><div><span class="section-index">THE PLAYGROUND</span><h1 id="world-heading">A world in the making<span>.</span></h1></div><span class="world-live"><span class="status-dot" aria-hidden="true"></span>STEP TO EVOLVE</span></div>
+          <div id="viewport" tabindex="0" role="region" aria-label="3D voxel world">
+            <div class="viewport-topline" aria-hidden="true"><span>16 × 5 × 16 VOXELS</span><span>FIXED BLACK BOUNDARY</span></div>
+            <div class="viewport-help">DRAG TO ORBIT <span>·</span> SCROLL TO ZOOM <span>·</span> CLICK TO SELECT</div>
+          </div>
+          <div class="viewport-toolbar"><output id="world-summary">1,280 black voxels</output><div class="camera-controls" aria-label="Camera controls"><button id="camera-left" class="icon-button" type="button" aria-label="Rotate view left" title="Rotate left">↶</button><button id="camera-right" class="icon-button" type="button" aria-label="Rotate view right" title="Rotate right">↷</button><span class="toolbar-divider" aria-hidden="true"></span><button id="camera-out" class="icon-button" type="button" aria-label="Zoom out" title="Zoom out">−</button><button id="camera-in" class="icon-button" type="button" aria-label="Zoom in" title="Zoom in">+</button><button id="camera-reset" class="text-button" type="button">Reset view</button></div></div>
+          <div class="status-box"><span class="status-spark" aria-hidden="true">✳</span><p id="status" role="status" aria-live="polite">Choose a player color, then take a step.</p></div>
+          <div class="game-rule"><span>EVERY STEP, ALL AT ONCE</span><p>Self + six neighbors <b>÷ 7</b> <span class="rule-dot">·</span> Beneath you, add your chosen color <b>÷ 8</b>. Outside voxels stay black.</p></div>
+        </section>
+        <aside class="control-panel" aria-label="World controls">
+          <section class="control-section color-section" aria-labelledby="color-heading">
+            <div class="control-heading"><h2 id="color-heading">Player color</h2><span class="control-index">01</span></div>
+            <div class="color-picker-row"><input id="color-picker" type="color" value="#000000" aria-label="Player color picker" /><div><strong>Make your mark.</strong><p>Pick a color to carry with you.</p></div></div>
+            <div class="channel-grid"><label for="color-r"><span class="channel-dot red" aria-hidden="true"></span>Red<input id="color-r" type="number" min="0" max="255" step="1" value="0" inputmode="numeric" /></label><label for="color-g"><span class="channel-dot green" aria-hidden="true"></span>Green<input id="color-g" type="number" min="0" max="255" step="1" value="0" inputmode="numeric" /></label><label for="color-b"><span class="channel-dot blue" aria-hidden="true"></span>Blue<input id="color-b" type="number" min="0" max="255" step="1" value="0" inputmode="numeric" /></label></div>
+            <div class="swatches" aria-label="Color presets"><span>TRY A COLOR</span><button type="button" data-color="#c9fa73" style="--swatch:#c9fa73" aria-label="Choose Lime color" title="Lime"></button><button type="button" data-color="#ff6686" style="--swatch:#ff6686" aria-label="Choose Rose color" title="Rose"></button><button type="button" data-color="#68c8ff" style="--swatch:#68c8ff" aria-label="Choose Sky color" title="Sky"></button><button type="button" data-color="#ffffff" style="--swatch:#ffffff" aria-label="Choose White color" title="White"></button><button type="button" data-color="#000000" style="--swatch:#000000" aria-label="Choose Black color" title="Black"></button></div>
+            <p class="control-hint">Color enters the world only when you step or paint.</p>
+          </section>
+          <section class="control-section movement-section" aria-labelledby="movement-heading"><div class="control-heading"><h2 id="movement-heading">Take a step</h2><span class="control-index">02</span></div><div class="movement-row"><div class="direction-pad" aria-label="Movement controls"><button class="north" type="button" data-move="0,-1" aria-label="Step north">↑</button><button class="west" type="button" data-move="-1,0" aria-label="Step west">←</button><span class="pad-center" aria-hidden="true">·</span><button class="east" type="button" data-move="1,0" aria-label="Step east">→</button><button class="south" type="button" data-move="0,1" aria-label="Step south">↓</button></div><div class="movement-copy"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><p>or arrow keys<br />One press. One step.</p></div></div><button id="paint-below" class="button button-secondary full-width" type="button">Paint below player <span aria-hidden="true">↘</span></button></section>
+          <section class="control-section selection-section" aria-labelledby="selection-heading"><div class="control-heading"><h2 id="selection-heading">Selected voxel</h2><span class="control-index">03</span></div><div class="coordinate-grid"><label for="voxel-x">X<input id="voxel-x" type="number" min="0" max="15" step="1" value="8" aria-label="X coordinate" inputmode="numeric" /></label><label for="voxel-y">Y<input id="voxel-y" type="number" min="0" max="4" step="1" value="4" aria-label="Y coordinate" inputmode="numeric" /></label><label for="voxel-z">Z<input id="voxel-z" type="number" min="0" max="15" step="1" value="8" aria-label="Z coordinate" inputmode="numeric" /></label><button id="select-voxel" type="button" class="select-coordinate" aria-label="Select voxel at entered coordinates" title="Select voxel">↗</button></div><output id="selected-rgb" class="selected-rgb">RGB 0.00 / 0.00 / 0.00</output><button id="paint-selected" class="button button-secondary full-width" type="button">Paint selected <span aria-hidden="true">↗</span></button></section>
+          <section class="control-section view-section" aria-labelledby="layers-heading"><div class="control-heading"><h2 id="layers-heading"><label for="visible-layers">Layer cutaway</label></h2><output id="layer-value">5 / 5</output></div><input id="visible-layers" type="range" min="1" max="5" step="1" value="5" aria-label="Visible layers" /><p class="control-hint">Peek inside. Hidden layers keep evolving.</p><button id="reset-world" class="reset-button" type="button"><span aria-hidden="true">↺</span> Reset to black</button></section>
+        </aside>
+      </main>
+      <footer class="game-footer"><span>BLACK IS THE BEGINNING.</span><span>NO TIMER. MOVE AT YOUR OWN PACE.</span></footer>
+    </section>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
