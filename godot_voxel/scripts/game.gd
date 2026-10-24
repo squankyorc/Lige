@@ -61,4 +61,4 @@ func _process(_delta: float) -> void:
 
 func _exit_tree() -> void:
 	if is_instance_valid(world) and is_instance_valid(player):
-		world.save_world(player.global_position)
+		world.save_world(player.position)
