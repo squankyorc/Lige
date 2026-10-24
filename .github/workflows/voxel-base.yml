@@ -43,8 +43,10 @@ jobs:
           use-dotnet: false
       - name: Import project and register script classes
         run: godot --headless --path godot_voxel --editor --import --quit
+      - name: Parse Godot test runner
+        run: godot --headless --path godot_voxel --check-only --script res://tests/world_test.gd
       - name: World limits and block edit tests
-        timeout-minutes: 2
-        run: godot --headless --path godot_voxel --script res://tests/world_test.gd
+        timeout-minutes: 1
+        run: timeout 25s godot --headless --path godot_voxel --script res://tests/world_test.gd
       - name: Start main scene briefly
         run: godot --headless --path godot_voxel --quit-after 10
