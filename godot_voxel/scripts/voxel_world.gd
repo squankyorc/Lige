@@ -122,7 +122,7 @@ func _process(_delta: float) -> void:
 	# Bounded generation budget, avoids constructing hundreds of chunks on one frame.
 	var budget := 2
 	while budget > 0 and not pending.is_empty():
-		var cc := pending.pop_front()
+		var cc: Vector3i = pending.pop_front()
 		var key := cell_key(cc)
 		queued.erase(key)
 		if desired.has(key) and not chunks.has(key):
