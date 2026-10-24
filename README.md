@@ -99,3 +99,11 @@ The manual checks above are a repeatable procedure, not a claim that every brows
 Controls use labeled HTML inputs and buttons, visible keyboard focus, and a live status message for actions. Movement and painting can be performed without clicking the 3D scene, and the coordinate/RGB inspector provides a numeric view of voxel state. There is no audio.
 
 The 3D canvas still requires vision for full spatial exploration and is not a complete screen-reader representation of the world. This first version is a fixed-size sandbox with no persistence, multiplayer, terrain editing, or continuous walking.
+
+## Native Windows version (Godot 4.7.2)
+
+The `godot/` folder is a Godot 4.7.2 port with the same rule (self + existing face neighbors, synchronous, player color as an extra sample below you, static between steps), rendered with a MultiMesh in a third-person view. Download the Windows zip from the GitHub Releases page, unzip, and run `Lige.exe`.
+
+Controls: WASD/arrows step (camera-relative, one tick per step), 1–8 preset colors or the color picker, Space paints the block below, right-drag or Q/E orbit, mouse wheel zoom, F toggles faint-color reveal, `[`/`]` cut away/restore top layers, R reset, Esc quit.
+
+Headless test: `godot --headless --path godot --script res://tests/averaging_test.gd`
