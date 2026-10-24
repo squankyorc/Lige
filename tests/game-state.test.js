@@ -96,7 +96,7 @@ test('a move contributes the chosen RGB only at the destination standing voxel',
   const game = new GameState(world);
   game.setPlayerColor([160, 80, 40]);
   game.move(1, 0);
-  assert.deepEqual(world.getColor(2, 1, 1), [20, 10, 5]);
+  assert.deepEqual(world.getColor(2, 1, 1), [160 / 6, 80 / 6, 40 / 6].map((v) => Math.fround(v)));
   assert.deepEqual(world.getColor(1, 1, 1), [0, 0, 0]);
   assert.equal(Array.from(world.colors).filter((v) => v !== 0).length, 3);
   assert.deepEqual(game.player, { x: 2, y: 2, z: 1 });

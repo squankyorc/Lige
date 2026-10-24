@@ -34,14 +34,14 @@ test('updates are simultaneous and reuse exactly two buffers', () => {
   world.step();
   assert.equal(world.colors, second);
   assert.equal(world.scratch, first);
-  closeRGB(world.getColor(0, 0, 0), [35, 10, 20]);
-  closeRGB(world.getColor(1, 0, 0), [35, 10, 20]);
+  closeRGB(world.getColor(0, 0, 0), [245 / 2, 35, 70]);
+  closeRGB(world.getColor(1, 0, 0), [245 / 3, 70 / 3, 140 / 3]);
   assert.deepEqual(world.getColor(2, 0, 0), [0, 0, 0]);
   assert.deepEqual(world.getColor(3, 0, 0), [0, 0, 0]);
   world.step();
   assert.equal(world.colors, first);
   assert.equal(world.scratch, second);
-  closeRGB(world.getColor(2, 0, 0), [5, 10 / 7, 20 / 7]);
+  closeRGB(world.getColor(2, 0, 0), [245 / 9, 70 / 9, 140 / 9]);
 });
 
 test('color spreads only one face per step, never diagonally or across wrapped rows', () => {
@@ -49,7 +49,7 @@ test('color spreads only one face per step, never diagonally or across wrapped r
   world.setColor(1, 1, 1, [140, 70, 35]);
   world.step();
   assert.equal(Array.from({ length: world.size }, (_, i) => world.colors[i * 3]).filter((v) => v > 0).length, 7);
-  closeRGB(world.getColor(2, 1, 1), [20, 10, 5]);
+  closeRGB(world.getColor(2, 1, 1), [140 / 6, 70 / 6, 35 / 6]);
   assert.deepEqual(world.getColor(2, 2, 1), [0, 0, 0]);
   assert.deepEqual(world.getColor(2, 2, 2), [0, 0, 0]);
 
@@ -60,7 +60,7 @@ test('color spreads only one face per step, never diagonally or across wrapped r
   assert.deepEqual(edge.getColor(2, 2, 2), [0, 0, 0]);
 });
 
-test('faces, edges, and corners always normalize by seven with fixed-black outside', () => {
+test('a uniform world stays exactly the same color at faces, edges, and corners', () => {
   const world = new VoxelWorld(3, 3, 3);
   for (let z = 0; z < 3; z++) {
     for (let y = 0; y < 3; y++) {
@@ -69,23 +69,25 @@ test('faces, edges, and corners always normalize by seven with fixed-black outsi
   }
   world.step();
   closeRGB(world.getColor(1, 1, 1), [70, 140, 210]);
-  closeRGB(world.getColor(0, 1, 1), [60, 120, 180]);
-  closeRGB(world.getColor(0, 0, 1), [50, 100, 150]);
-  closeRGB(world.getColor(0, 0, 0), [40, 80, 120]);
+  closeRGB(world.getColor(0, 1, 1), [70, 140, 210]);
+  closeRGB(world.getColor(0, 0, 1), [70, 140, 210]);
+  closeRGB(world.getColor(0, 0, 0), [70, 140, 210]);
+  for (let i = 0; i < 50; i++) world.step();
+  closeRGB(world.getColor(0, 0, 0), [70, 140, 210]);
 });
 
-test('a singleton uses self plus six fixed-black outside neighbors', () => {
+test('a singleton has no neighbors and keeps its color', () => {
   const world = new VoxelWorld(1, 1, 1);
   world.setColor(0, 0, 0, [7, 14, 21]);
   world.step();
-  assert.deepEqual(world.getColor(0, 0, 0), [1, 2, 3]);
+  assert.deepEqual(world.getColor(0, 0, 0), [7, 14, 21]);
 });
 
 test('fractional channel values survive diffusion without integer rounding', () => {
   const world = new VoxelWorld(1, 1, 1);
   world.setColor(0, 0, 0, [1, 0.5, 0.25]);
   world.step();
-  closeRGB(world.getColor(0, 0, 0), [1 / 7, 0.5 / 7, 0.25 / 7]);
+  closeRGB(world.getColor(0, 0, 0), [1, 0.5, 0.25]);
   assert.ok(world.getColor(0, 0, 0)[0] > 0);
 });
 
@@ -133,15 +135,15 @@ test('the player contribution is simultaneous and reaches adjacent voxels only o
   assert.deepEqual(world.getColor(1, 1, 1), [10, 20, 30]);
   assert.equal(Array.from(world.colors).filter((v) => v !== 0).length, 3);
   world.step();
-  closeRGB(world.getColor(0, 1, 1), [10 / 7, 20 / 7, 30 / 7]);
+  closeRGB(world.getColor(0, 1, 1), [10 / 6, 20 / 6, 30 / 6]);
   assert.deepEqual(world.getColor(0, 0, 1), [0, 0, 0]);
 });
 
-test('a boundary standing voxel still counts all six black outside samples in the divisor of eight', () => {
+test('a boundary standing voxel averages only itself and the player color when it has no neighbors', () => {
   const world = new VoxelWorld(1, 1, 1);
   world.setColor(0, 0, 0, [56, 112, 168]);
   world.step({ x: 0, y: 0, z: 0, color: [8, 16, 24] });
-  assert.deepEqual(world.getColor(0, 0, 0), [8, 16, 24]);
+  assert.deepEqual(world.getColor(0, 0, 0), [32, 64, 96]);
 });
 
 test('invalid player contributions leave both buffers unchanged', () => {
@@ -160,4 +162,13 @@ test('invalid player contributions leave both buffers unchanged', () => {
     assert.deepEqual(world.colors, before);
     assert.deepEqual(world.scratch, scratchBefore);
   }
+});
+
+test('colors stay static between steps; only step() changes them', () => {
+  const world = new VoxelWorld(4, 2, 3);
+  world.setColor(1, 1, 1, [200, 100, 50]);
+  world.step();
+  const snap = world.colors.slice();
+  world.getColor(1, 1, 1); world.getColor(0, 0, 0);
+  assert.deepEqual(world.colors, snap);
 });

@@ -5,7 +5,7 @@ export function validateRGB(rgb) {
   }
 }
 
-/** RGB diffusion on a bounded voxel volume. Outside the volume is fixed black. */
+/** RGB diffusion on a bounded voxel volume. Each block averages itself and its existing face neighbors. */
 export class VoxelWorld {
   constructor(width = 16, height = 5, depth = 16) {
     if (![width, height, depth].every((n) => Number.isSafeInteger(n) && n > 0)) {
@@ -79,24 +79,26 @@ export class VoxelWorld {
       let r = current[offset];
       let g = current[offset + 1];
       let b = current[offset + 2];
+      let divisor = 1;
       for (let face = 0; face < 6; face++) {
         const neighbor = this.neighbors[i * 6 + face];
         if (neighbor < 0) continue;
+        divisor++;
         const other = neighbor * 3;
         r += current[other];
         g += current[other + 1];
         b += current[other + 2];
       }
-      let divisor = 7;
       if (i === contributionIndex) {
         // The player's chosen color is an eighth sample at the standing voxel.
         // Add it only to the output so neighbors see it starting next step.
         r += playerContribution.color[0];
         g += playerContribution.color[1];
         b += playerContribution.color[2];
-        divisor = 8;
+        divisor++;
       }
-      // Missing neighbors count as black, including at the standing voxel.
+      // Average only blocks that exist: there is no phantom black outside the world,
+      // so a settled color stays put until real neighbors change it.
       next[offset] = r / divisor;
       next[offset + 1] = g / divisor;
       next[offset + 2] = b / divisor;

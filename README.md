@@ -61,9 +61,9 @@ On a successful move, **the block below the player's destination includes the ch
 channel_next_under_player = (self + left + right + above + below + front + back + player_channel) / 8
 ```
 
-All other voxels use the base divisor of seven. The destination block uses eight even when the chosen player color is black. This averages the player color into the same synchronous update; it does not overwrite the block or paint it before the update.
+Interior voxels use the base divisor of seven. An interior destination block uses eight even when the chosen player color is black. This averages the player color into the same synchronous update; it does not overwrite the block or paint it before the update.
 
-**Boundary behavior: outside is permanently black.** A missing neighbor contributes zero. The divisor remains seven for ordinary voxels and eight for the destination block below the player, including at faces, edges, and corners. Color can therefore drain out through the boundary. Diagonal neighbors do not contribute.
+**Boundary behavior: only real blocks are averaged.** At faces, edges, and corners a block averages itself plus the face neighbors that exist (divisor = 1 + existing neighbors, +1 more for the player color at the destination block). There is no phantom black outside the world, so colors do not drain away: after each step every block holds its new average, unchanged, until the next step. A uniformly colored world stays exactly that color. Diagonal neighbors do not contribute.
 
 Updates are synchronous: every result reads the same old state, is written into a second buffer, and becomes visible only after the entire update completes. Each successful player step performs exactly one such update. Painting changes one voxel immediately but does not itself advance diffusion. Camera movement, selection, and layer changes also do not advance it.
 
@@ -78,7 +78,7 @@ RGB channels are stored in `Float32Array` buffers on a 0–255 scale. Fractional
 
 ## Verification
 
-`pnpm test` runs 27 tests covering the black invariant, independent RGB channel averaging, all six face neighbors, synchronous double-buffer behavior, color spreading, fixed-black boundary normalization, player-color injection, resetting, faint-color display, and the relationship between successful movement and diffusion. CI installs from the lockfile, runs the tests, builds the production bundle, and publishes main to GitHub Pages after those checks pass. Pull requests run the checks without publishing.
+`pnpm test` runs 28 tests covering the black invariant, independent RGB channel averaging, all six face neighbors, synchronous double-buffer behavior, color spreading, boundary averaging over existing neighbors only, player-color injection, resetting, faint-color display, and the relationship between successful movement and diffusion. CI installs from the lockfile, runs the tests, builds the production bundle, and publishes main to GitHub Pages after those checks pass. Pull requests run the checks without publishing.
 
 Browser verification on October 23, 2026 covered the home screen, black startup, exact `[240, 80, 40] / 8` injection, later neighbor spreading, direct painting without a step, home/resume state preservation, a held movement key, blocked movement, cutaway/camera controls, reset, and a 390-pixel-wide layout. This checks the tested browser; it is not a claim of compatibility with every device.
 
@@ -87,7 +87,7 @@ For a manual browser check:
 1. Load the game and take several steps with the initial black player color and no painting; confirm selected voxel RGB values remain zero.
 2. Reset, choose player color `[240, 80, 40]`, and confirm choosing alone changes no voxels. Take one step and inspect the destination block below the player; expect `[30, 10, 5]` within floating-point precision. Nearby voxels should stay black until another step.
 3. Reset, choose `[210, 70, 35]`, and paint coordinate `(8, 2, 8)`. Set the player color back to black and take one step. Inspect the painted voxel and its six face neighbors; expect `[30, 10, 5]`.
-4. Paint a corner away from the destination below the player, then step; verify missing outside neighbors count as black and its channel total is divided by seven. Verify the destination block still uses eight.
+4. Paint a corner away from the destination below the player, then step; verify its channel total is divided by four (self plus its three existing neighbors), and that colors stay fixed until the next step.
 5. Hold a movement key; verify it takes only one step until released and pressed again. Try stepping past an edge; verify the counter and colors do not change.
 6. Return **Home**, try movement keys, and choose **Resume world**; confirm the world and step count were preserved and no steps occurred on the home screen.
 7. Try coordinate selection, the layer cutaway, movement/view buttons, keyboard-only painting, and reset. Confirm reset also clears the chosen player color. Check a narrow viewport and browser zoom as well.
