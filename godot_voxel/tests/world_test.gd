@@ -28,5 +28,6 @@ func _initialize() -> void:
 	expect(not w.set_block(Vector3i(5, 257, 3), 5), "cannot build above ceiling")
 	expect(not w.set_block(Vector3i(5, -257, 3), 5), "cannot build below floor")
 	expect(not w.set_block(Vector3i(5, -256, 3), 0), "bedrock stays")
+	w.free()
 	print("PASS" if failures == 0 else "FAIL: %d tests" % failures)
 	quit(1 if failures else 0)
