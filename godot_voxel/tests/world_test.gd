@@ -10,7 +10,7 @@ func expect(value: bool, label: String) -> void:
 	else:
 		print("OK: ", label)
 
-func _init() -> void:
+func _initialize() -> void:
 	expect(VoxelBaseWorld.valid_y(-256), "bottom block included")
 	expect(VoxelBaseWorld.valid_y(256), "top block included")
 	expect(not VoxelBaseWorld.valid_y(-257), "below floor excluded")
