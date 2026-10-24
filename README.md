@@ -43,7 +43,7 @@ Drag to orbit the camera and scroll to zoom. The view buttons also orbit, zoom, 
 
 The bright player marker, selection outline, and subtle voxel-edge guides are interface aids, not colored voxels. A black voxel's stored RGB channels are exactly zero even when a guide makes its edges visible.
 
-**Reveal faint colors** starts enabled because division by eight makes a player's first contribution very dark (RGB `[100, 100, 100]` becomes `[12.5, 12.5, 12.5]`). It brightens only the rendered voxel colors while preserving RGB channel ratios and keeping pure black exactly black. For a nonzero voxel, the display multiplies each channel by `sqrt(255 / max(R,G,B))`; the maximum displayed channel stays within 255. Uncheck it to show exact RGB brightness. Simulation buffers, the inspector, and the step counter are unaffected. Equal R/G/B values produce grayscale; use unequal channels or a preset to leave a colored trail.
+**Reveal faint colors** starts enabled because division by eight makes a player's first contribution very dark (RGB `[100, 100, 100]` becomes `[12.5, 12.5, 12.5]`). It brightens only the rendered voxel colors while preserving RGB channel ratios and keeping pure black exactly black. For a nonzero voxel, the display multiplies each channel by `(255 / max(R,G,B))^0.75`; the maximum displayed channel stays within 255. Uncheck it to show exact RGB brightness. Simulation buffers, the inspector, and the step counter are unaffected. Equal R/G/B values produce grayscale; use unequal channels or a preset to leave a colored trail.
 
 ## Diffusion rule
 

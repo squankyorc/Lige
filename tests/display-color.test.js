@@ -20,8 +20,8 @@ test('a first step with RGB 100 reveals the 12.5 channel value more visibly', ()
   const value = 100 / 8;
   const scale = displayColorScale(value, value, value);
   const displayed = value * scale;
-  assert.ok(Math.abs(displayed - Math.sqrt(value * 255)) < 1e-12);
-  assert.ok(displayed > 56 && displayed < 57);
+  assert.ok(Math.abs(displayed - 255 * (value / 255) ** 0.25) < 1e-12);
+  assert.ok(displayed > 119 && displayed < 121);
   assert.ok(displayed > value);
 });
 
@@ -35,7 +35,7 @@ test('revealing faint color preserves channel ratios and never clips', () => {
       else assert.ok(Math.abs(displayed[channel] / displayed[0] - rgb[channel] / rgb[0]) < 1e-12);
     }
     const peak = Math.max(...rgb);
-    assert.ok(Math.abs(Math.max(...displayed) - Math.sqrt(peak * 255)) < 1e-12);
+    assert.ok(Math.abs(Math.max(...displayed) - 255 * (peak / 255) ** 0.25) < 1e-12);
   }
 });
 
